@@ -63,15 +63,15 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-k6:
-  name: Run k6 Smoke Test
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+  k6:
+    name: Run k6 Smoke Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Install k6
-      run: |
+      - name: Install k6
+        run: |
         sudo apt update
         sudo apt install -y gnupg software-properties-common
         sudo gpg -k || true
@@ -80,6 +80,6 @@ k6:
         sudo apt update
         sudo apt install -y k6
 
-    - name: Run k6 Test
-      run: k6 run loadtest/script.js
+      - name: Run k6 Test
+        run: k6 run loadtest/script.js
 
