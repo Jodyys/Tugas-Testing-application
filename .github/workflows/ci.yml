@@ -59,27 +59,27 @@ jobs:
         run: npm ci
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+        uses: sonarsource/sonarqube-scan-action@v1
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  k6:
-    name: Run k6 Smoke Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+k6:
+  name: Run k6 Smoke Test
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Install k6
-        run: |
-          sudo apt update
-          sudo apt install -y gnupg software-properties-common
-          sudo gpg -k || true
-          curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-          sudo apt update
-          sudo apt install -y k6
+    - name: Install k6
+      run: |
+        sudo apt update
+        sudo apt install -y gnupg software-properties-common
+        sudo gpg -k || true
+        curl -s https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+        echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+        sudo apt update
+        sudo apt install -y k6
 
-      - name: Run k6 Test
-        run: k6 run loadtest/script.js
+    - name: Run k6 Test
+      run: k6 run loadtest/script.js
 
