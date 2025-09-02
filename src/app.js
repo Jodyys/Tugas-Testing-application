@@ -1,8 +1,7 @@
 // src/app.js
-const express = require('express');
-const bodyParser = require('body-parser');
-const store = require('./store');
-
+import express from 'express';
+import bodyParser from 'body-parser';
+import * as store from './store.js';
 const app = express();
 app.use(bodyParser.json());
 
@@ -39,4 +38,5 @@ app.delete('/notes/:id', (req, res) => {
   res.status(204).send();
 });
 
-module.exports = app;
+export default app;
+

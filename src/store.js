@@ -15,15 +15,15 @@ function _write(arr) {
   return STORE;
 }
 
-function listNotes() {
+export function listNotes() {
   return _read();
 }
 
-function getNote(id) {
+export function getNote(id) {
   return _read().find(n => n.id === id) || null;
 }
 
-function createNote({ title = '', body = '' }) {
+export function createNote({ title = '', body = '' }) {
   const data = _read();
   const id = String(Date.now());
   const note = { id, title: String(title), body: String(body) };
@@ -32,7 +32,7 @@ function createNote({ title = '', body = '' }) {
   return note;
 }
 
-function updateNote(id, { title, body }) {
+export function updateNote(id, { title, body }) {
   const data = _read();
   const idx = data.findIndex(n => n.id === id);
   if (idx === -1) return null;
@@ -47,7 +47,7 @@ function updateNote(id, { title, body }) {
   return updated;
 }
 
-function deleteNote(id) {
+export function deleteNote(id) {
   const data = _read();
   const before = data.length;
   const after = data.filter(n => n.id !== id);
@@ -56,10 +56,6 @@ function deleteNote(id) {
 }
 
 // Util buat demo/eksperimen sonar
-function resetStore() { STORE = '[]'; }
-function rawString() { return STORE; }
+export function resetStore() { STORE = '[]'; }
+export function rawString() { return STORE; }
 
-module.exports = {
-  listNotes, getNote, createNote, updateNote, deleteNote,
-  resetStore, rawString,
-};
