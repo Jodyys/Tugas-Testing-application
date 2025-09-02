@@ -1,14 +1,14 @@
 // eslint.config.js (ESM)
 
-import { FlatCompat } from '@eslint/eslintrc';
-import js from '@eslint/js';
+const { FlatCompat } = require('@eslint/eslintrc');
+const js = require('@eslint/js');
 
 const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
   eslintrc: true
 });
 
-export default [
+module.exports = [
   js.configs.recommended,
 
   ...compat.config({
