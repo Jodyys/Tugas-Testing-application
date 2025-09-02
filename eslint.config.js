@@ -24,13 +24,16 @@ export default [
     }
   }),
 
-  // Konfigurasi khusus untuk script k6 (agar __ENV tidak error)
+  // Konfigurasi khusus untuk script k6 (agar __ENV tidak error dan no-redeclare dimatikan)
   {
     files: ["loadtest/**/*.js"],
     languageOptions: {
       globals: {
         __ENV: "readonly"
       }
+    },
+    rules: {
+      "no-redeclare": "off"
     }
   }
 ];
