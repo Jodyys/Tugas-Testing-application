@@ -46,7 +46,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      # Setup Java untuk SonarQube Scanner
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
@@ -58,7 +57,6 @@ jobs:
       - run: echo "JAVA_HOME=${JAVA_HOME_17_X64}" >> $GITHUB_ENV
 
       - run: npm ci
-        shell: bash
 
       # Download coverage artifact dari job test
       - name: Download coverage artifact
@@ -67,8 +65,8 @@ jobs:
           name: coverage-report
           path: coverage
 
-      # Cek file coverage sudah ada atau belum
-      - name: Check coverage files before scanning
+      # Pastikan file coverage ada
+      - name: List coverage folder contents
         run: ls -l coverage
 
       - name: Install Sonar Scanner CLI
@@ -88,8 +86,7 @@ jobs:
             -Dsonar.tests=tests \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN \
-            -X
+            -Dsonar.login=$SONAR_TOKEN
 
   k6:
     name: Run k6 Smoke Test
