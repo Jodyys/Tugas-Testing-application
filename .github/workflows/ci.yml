@@ -96,4 +96,3 @@ jobs:
 
       - name: Run k6 Test
         run: k6 run loadtest/script.js
-
