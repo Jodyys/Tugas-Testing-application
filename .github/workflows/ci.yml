@@ -31,8 +31,13 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test -- --coverage
-      - name: Check coverage files
-        run: ls -l coverage
+
+      # Upload folder coverage sebagai artifact supaya bisa diakses di job lain
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage
 
   sonarqube:
     name: SonarQube Scan
@@ -41,6 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # Setup Java untuk SonarQube Scanner
       - uses: actions/setup-java@v3
         with:
           distribution: temurin
@@ -54,14 +60,22 @@ jobs:
       - run: npm ci
         shell: bash
 
+      # Download coverage artifact dari job test
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage
+
+      # Cek file coverage sudah ada atau belum
+      - name: Check coverage files before scanning
+        run: ls -l coverage
+
       - name: Install Sonar Scanner CLI
         run: |
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
           unzip sonar-scanner-cli-5.0.1.3006-linux.zip
           echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
-
-      - name: Check coverage files before scanning
-        run: ls -l coverage
 
       - name: Run SonarQube Scanner
         env:
