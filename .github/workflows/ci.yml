@@ -31,6 +31,8 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run test -- --coverage
+      - name: Check coverage files
+        run: ls -l coverage
 
   sonarqube:
     name: SonarQube Scan
@@ -44,20 +46,22 @@ jobs:
           distribution: temurin
           java-version: 17
 
+      - name: Debug Java Version
+        run: java -version
+
       - run: echo "JAVA_HOME=${JAVA_HOME_17_X64}" >> $GITHUB_ENV
 
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-
       - run: npm ci
+        shell: bash
 
       - name: Install Sonar Scanner CLI
         run: |
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
           unzip sonar-scanner-cli-5.0.1.3006-linux.zip
           echo "$PWD/sonar-scanner-5.0.1.3006-linux/bin" >> $GITHUB_PATH
+
+      - name: Check coverage files before scanning
+        run: ls -l coverage
 
       - name: Run SonarQube Scanner
         env:
@@ -66,14 +70,12 @@ jobs:
         run: |
           sonar-scanner \
             -Dsonar.projectKey=notes-app-sonar \
-            -Dsonar.projectName=notes-app-sonar \
-            -Dsonar.sourceEncoding=UTF-8 \
             -Dsonar.sources=src \
             -Dsonar.tests=tests \
-            -Dsonar.test.inclusions=tests/**/*.test.js \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.host.url=$SONAR_HOST_URL \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.login=$SONAR_TOKEN \
+            -X
 
   k6:
     name: Run k6 Smoke Test
