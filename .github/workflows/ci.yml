@@ -44,13 +44,14 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Debug Java Version
-        run: java -version
-
       - run: echo "JAVA_HOME=${JAVA_HOME_17_X64}" >> $GITHUB_ENV
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
       - run: npm ci
-        shell: bash
 
       - name: Install Sonar Scanner CLI
         run: |
@@ -65,8 +66,11 @@ jobs:
         run: |
           sonar-scanner \
             -Dsonar.projectKey=notes-app-sonar \
+            -Dsonar.projectName=notes-app-sonar \
+            -Dsonar.sourceEncoding=UTF-8 \
             -Dsonar.sources=src \
             -Dsonar.tests=tests \
+            -Dsonar.test.inclusions=tests/**/*.test.js \
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.host.url=$SONAR_HOST_URL \
             -Dsonar.login=$SONAR_TOKEN
